@@ -23,10 +23,6 @@ class ViewServiceProvider extends ServiceProvider implements DeferrableProvider
      */
     public function register()
     {
-        $this->booting(function(){
-
-        });
-        $name = 'php';
-        $this->app->singleton('view', sprintf(__NAMESPACE__.'\\Renderer\\%sRenderer', ucfirst($name)));
+        $this->app->singleton('view', Renderer::class);
     }
 }

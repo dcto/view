@@ -57,12 +57,12 @@ abstract class AbstractRenderer
      * @param \SplPriorityQueue $paths
      * @param array             $config
      */
-    public function __construct($paths=__DIR__, $config = [])
+    public function __construct($config = [])
     {
         $this->config['_'] = make('lang');
         $this->config($config);
         $this->paths = new \SplPriorityQueue();
-        $this->path($paths);
+        $this->path(_DIR_._DS_.'View');
     }
 
     /**
