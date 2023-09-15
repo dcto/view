@@ -26,12 +26,7 @@
 
   "require": {
     "php": "^7.3",
-    "varimax/varimax":"dev-master",
-    "twig/twig": "~2.10.0",
-    "league/plates": "~3.3",
-    "illuminate/view": "^8.0",
-    "windwalker/renderer": "^3.0",
-    "windwalker/view": "^2.1"
+    "varimax/varimax":"^3.0"
   },
 
   "suggest": {
