@@ -1,0 +1,42 @@
+{
+  "name": "varimax/view",
+  "description": "Varimax View Module",
+  "type": "project",
+  "keywords": ["php","php framework", "varimax view", "twig", "plates", "edge", "mustache"],
+  "license": "MIT",
+  "prefer-stable" : true,
+  "minimum-stability": "dev",
+  "homepage": "http://www.varimax.cn",
+  "support": {
+    "issues": "https://github.com/dcto/varimax/issues",
+    "source": "https://github.com/dcto/view"
+  },
+  "authors": [
+    {
+      "name": "dc.To",
+      "email": "sdoz@live.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {"VM\\View\\": "src"}
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+
+  "require": {
+    "php": "^7.3",
+    "varimax/varimax":"dev-master",
+    "twig/twig": "~2.10.0",
+    "league/plates": "~3.3",
+    "illuminate/view": "^8.0",
+    "windwalker/renderer": "^3.0",
+    "windwalker/view": "^2.1"
+  },
+
+  "suggest": {
+    "twig/twig": "Twig 2.6.x Of View Engine",
+    "league/plates": "Plates 3.x Of View Engine",
+    "illuminate/view": "Blade 7.* Of View Engine"
+  }
+}
