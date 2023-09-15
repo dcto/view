@@ -30,8 +30,8 @@
   },
 
   "suggest": {
-    "twig/twig": "Twig 2.6.x Of View Engine",
-    "league/plates": "Plates 3.x Of View Engine",
-    "illuminate/view": "Blade 7.* Of View Engine"
+    "twig/twig": "Twig ~2.6.x view engine",
+    "league/plates": "Plates ^3.0 view engine",
+    "illuminate/view": "Blade ^7.0 view engine"
   }
 }
