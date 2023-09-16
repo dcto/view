@@ -65,7 +65,7 @@ class Renderer {
      * @param string $path
      * @return VM\View\Renderer\PlatesRenderer
      */
-    public function Plates(array $config = [], $path = null){
+    public function plates(array $config = [], $path = null){
         return $this->make(__FUNCTION__)->config($config)->path($path);
     }
 
@@ -74,7 +74,7 @@ class Renderer {
      * @param string $path
      * @return VM\View\Renderer\TwigRenderer
      */
-    public function Twig(array $config = [], $path = null){
+    public function twig(array $config = [], $path = null){
         return $this->make(__FUNCTION__)->config($config)->path($path);
     }
 
