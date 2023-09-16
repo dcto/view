@@ -23,13 +23,6 @@ class PhpRenderer extends AbstractRenderer
      */
     protected $block = [];
 
-
-
-    /**
-     * Property config.
-     */
-    protected $config = [];
-
     /**
      * Property blockQueue.
      *

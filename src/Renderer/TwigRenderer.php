@@ -38,13 +38,6 @@ class TwigRenderer extends AbstractRenderer
     protected $extensions = [];
 
     /**
-     * Property config.
-     *
-     * @var  Structure|array
-     */
-    protected $config = [];
-
-    /**
      * Property debugExtension.
      *
      * @var  \Twig\Extension\DebugExtension

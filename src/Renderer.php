@@ -35,10 +35,50 @@ class Renderer {
      * @param string $renderer
      */
     public function make($render){
-        $render = sprintf(__NAMESPACE__.'\\Renderer\\%sRenderer', ucfirst($render));
-        $this->renderer = new $render;
+        if(!$this->renderer){
+            $render = sprintf(__NAMESPACE__.'\\Renderer\\%sRenderer', ucfirst($render));
+            $this->renderer = new $render;
+        }
         return $this;
     }
+
+    /**
+     * @param array $config
+     * @param string $path
+     * @return VM\View\Renderer\PhpRenderer
+     */
+    public function php(array $config = [], $path = null){
+        return $this->make(__FUNCTION__)->config($config)->path($path);
+    }
+
+    /**
+     * @param array $config
+     * @param string $path
+     * @return VM\View\Renderer\BladeRenderer
+     */
+    public function blade(array $config = [], $path = null){
+        return $this->make(__FUNCTION__)->config($config)->path($path);
+    }
+
+    /**
+     * @param array $config
+     * @param string $path
+     * @return VM\View\Renderer\PlatesRenderer
+     */
+    public function Plates(array $config = [], $path = null){
+        return $this->make(__FUNCTION__)->config($config)->path($path);
+    }
+
+    /**
+     * @param array $config
+     * @param string $path
+     * @return VM\View\Renderer\TwigRenderer
+     */
+    public function Twig(array $config = [], $path = null){
+        return $this->make(__FUNCTION__)->config($config)->path($path);
+    }
+
+
 
     /**
      * Dynamic call method

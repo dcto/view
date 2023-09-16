@@ -28,13 +28,6 @@ class PlatesRenderer extends AbstractRenderer
     protected $extensions = [];
 
     /**
-     * Property folders.
-     *
-     * @var  array
-     */
-    protected $folders = [];
-
-    /**
      * Method to get property Engine
      *
      * @param   boolean $new
@@ -47,7 +40,7 @@ class PlatesRenderer extends AbstractRenderer
             $this->engine = new PlatesEngine(
                 $this->getPath()[0]
             );
-            foreach ($this->folders as $namespace => $folder) {
+            foreach ($this->paths as $namespace => $folder) {
                 $this->engine->addFolder($namespace, $folder['folder'], $folder['fallback']);
             }
 
@@ -130,7 +123,7 @@ class PlatesRenderer extends AbstractRenderer
      */
     public function addFolder($namespace, $folder, $fallback = false)
     {
-        $this->folders[$namespace] = [
+        $this->paths[$namespace] = [
             'folder' => $folder,
             'fallback' => $fallback,
         ];

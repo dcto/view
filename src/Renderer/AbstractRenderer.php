@@ -86,9 +86,13 @@ abstract class AbstractRenderer
 	 * set engine config
 	 * @param array|string config $item
 	 */
-	public function config($item) {
-        if(is_string($item)) return isset($this->config[$item]) ? $this->config[$item] : null;
-		$this->config = array_merge($this->config, $item);
+	public function config($item, $default = null) {
+        if(is_array($item)){
+            $this->config = array_merge($this->config, $item);
+            return $this;
+        }else if(is_string($item)){
+            return isset($this->config[$item]) ? $this->config[$item] : $default;
+        }
         return $this;
 	}
 

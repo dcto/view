@@ -97,34 +97,6 @@ class BladeRenderer extends AbstractRenderer
     {
         if (!$this->engine || $new) {
             $this->engine = new Factory($this->getResolver(), $this->getFinder(), $this->getDispatcher());
-
-            /** @var BladeCompiler $bladeCompiler */
-            $bladeCompiler = $this->getCompiler()->getCompiler();
-
-            // foreach (GlobalContainer::getCompilers() as $name => $callback) {
-            //     BladeExtending::extend($bladeCompiler, $name, $callback);
-            // }
-
-            // foreach ($this->getCustomCompilers() as $name => $callback) {
-            //     BladeExtending::extend($bladeCompiler, $name, $callback);
-            // }
-
-            // foreach (GlobalContainer::getExtensions() as $name => $callback) {
-            //     $bladeCompiler->extend($callback);
-            // }
-
-            // // B/C for 4.* and 5.*
-            // if (($rawTags = GlobalContainer::getRawTags()) && is_callable([$bladeCompiler, 'setRawTags'])) {
-            //     $bladeCompiler->setRawTags($rawTags[0], $rawTags[1]);
-            // }
-
-            // if ($tags = GlobalContainer::getContentTags()) {
-            //     $bladeCompiler->setContentTags($tags[0], $tags[1]);
-            // }
-
-            // if ($tags = GlobalContainer::getEscapedTags()) {
-            //     $bladeCompiler->setEscapedContentTags($tags[0], $tags[1]);
-            // }
         }
 
         return $this->engine;
