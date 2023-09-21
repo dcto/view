@@ -25,8 +25,7 @@
   },
 
   "require": {
-    "php": "^7.3",
-    "varimax/varimax":"^3.0|dev-master"
+    "varimax/varimax":"dev-master|^3.0"
   },
 
   "suggest": {
