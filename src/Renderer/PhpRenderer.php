@@ -1,21 +1,22 @@
 <?php 
-
 /**
-* 
-* @package view
-* @author  dc.To
-* @version 20230827
-* @copyright ©2023 dc team all rights reserved.
-*/
+ * @package \VM\View\Renderer
+ */
 namespace VM\View\Renderer;
 
 /**
- * Class PHPRenderer
- *
  * @since 2.0
  */
-class PhpRenderer extends AbstractRenderer
+class PhpRenderer
 {
+
+    /**
+     * Property file.
+     *
+     * @var string
+     */
+    protected $file;
+
     /**
      * Property block.
      *
@@ -51,13 +52,9 @@ class PhpRenderer extends AbstractRenderer
      */
     protected $parent = null;
 
-    /**
-     * Property file.
-     *
-     * @var string
-     */
-    protected $file;
-
+    /** @var string */
+    protected $extension = 'php';
+    
     /**
      * render
      *
@@ -69,15 +66,10 @@ class PhpRenderer extends AbstractRenderer
      */
     public function render($file, $__data = [])
     {
-        $this->assign($__data);
-
         $__filePath = $this->findFile($file);
-
         if (!$__filePath) {
             $__paths = $this->getPath();
-
             $__paths = "\n " . implode(" |\n ", $__paths);
-
             throw new \UnexpectedValueException(sprintf('File: %s not found. Paths in queue: %s', $file, $__paths));
         }
 
@@ -112,22 +104,9 @@ class PhpRenderer extends AbstractRenderer
             $parent->setBlock($name, $block);
         }
 
-        $output = $parent->render($this->extend, $this->assign);
+        $output = $parent->render($this->extend, $this->assign($__data)->assign);
 
         return $output;
-    }
-
-    /**
-     * finFile
-     *
-     * @param string $file
-     * @param string $ext
-     *
-     * @return  string
-     */
-    public function findFile($file, $ext = 'php')
-    {
-        return parent::findFile($file, $ext);
     }
 
     /**
@@ -174,7 +153,7 @@ class PhpRenderer extends AbstractRenderer
      */
     protected function createSelf()
     {
-        return new static($this->paths, $this->config);
+        return new static($this->getPath(), $this->config);
     }
 
     /**
@@ -297,7 +276,6 @@ class PhpRenderer extends AbstractRenderer
         $this->block = [];
         $this->blockQueue = null;
         $this->currentBlock = null;
-
         return $this;
     }
 }

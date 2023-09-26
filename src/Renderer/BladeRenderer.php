@@ -1,11 +1,7 @@
 <?php 
 /**
-* 
-* @package view
-* @author  dc.To
-* @version 20230827
-* @copyright ©2023 dc team all rights reserved.
-*/
+ * @package \VM\View\Renderer
+ */
 namespace VM\View\Renderer;
 
 use Illuminate\View\Factory;
@@ -21,15 +17,8 @@ use Illuminate\View\Engines\EngineResolver;
  *
  * @since  2.0
  */
-class BladeRenderer extends AbstractRenderer
+class BladeRenderer
 {
-    /**
-     * Property blade.
-     *
-     * @var  Factory
-     */
-    protected $engine = null;
-
     /**
      * Property filesystem.
      *
@@ -82,8 +71,7 @@ class BladeRenderer extends AbstractRenderer
      */
     public function render($file, $data = [])
     {
-        $this->assign($data);
-        return $this->getEngine()->make($file, (array) $this->assign)->render();
+        return $this->getEngine()->make($file, $this->assign($data)->$data)->render();
     }
 
     /**
@@ -98,15 +86,12 @@ class BladeRenderer extends AbstractRenderer
         if (!$this->engine || $new) {
             $this->engine = new Factory($this->getResolver(), $this->getFinder(), $this->getDispatcher());
         }
-
         return $this->engine;
     }
 
     /**
      * Method to set property blade
-     *
      * @param   Factory $blade
-     *
      * @return  static  Return self to support chaining.
      */
     public function setEngine($blade)
@@ -114,23 +99,19 @@ class BladeRenderer extends AbstractRenderer
         if (!($blade instanceof Factory)) {
             throw new \InvalidArgumentException('Engine object should be Illuminate\View\Environment.');
         }
-
         $this->engine = $blade;
-
         return $this;
     }
 
     /**
      * Method to get property Filesystem
-     *
      * @return  Filesystem
      */
-    public function getFilesystem()
+    protected function getFilesystem()
     {
         if (!$this->filesystem) {
             $this->filesystem = new Filesystem();
         }
-
         return $this->filesystem;
     }
 
@@ -141,10 +122,9 @@ class BladeRenderer extends AbstractRenderer
      *
      * @return  static  Return self to support chaining.
      */
-    public function setFilesystem($filesystem)
+    protected function setFilesystem($filesystem)
     {
         $this->filesystem = $filesystem;
-
         return $this;
     }
 
@@ -153,12 +133,11 @@ class BladeRenderer extends AbstractRenderer
      *
      * @return  FileViewFinder
      */
-    public function getFinder()
+    protected function getFinder()
     {
         if (!$this->finder) {
             $this->finder = new FileViewFinder($this->getFilesystem(), $this->getPath());
         }
-
         return $this->finder;
     }
 
@@ -169,10 +148,9 @@ class BladeRenderer extends AbstractRenderer
      *
      * @return  static  Return self to support chaining.
      */
-    public function setFinder($finder)
+    protected function setFinder($finder)
     {
         $this->finder = $finder;
-
         return $this;
     }
 
@@ -181,7 +159,7 @@ class BladeRenderer extends AbstractRenderer
      *
      * @return  EngineResolver
      */
-    public function getResolver()
+    protected function getResolver()
     {
         if (!$this->resolver) {
             $self = $this;
@@ -195,7 +173,6 @@ class BladeRenderer extends AbstractRenderer
                 }
             );
         }
-
         return $this->resolver;
     }
 
@@ -206,10 +183,9 @@ class BladeRenderer extends AbstractRenderer
      *
      * @return  static  Return self to support chaining.
      */
-    public function setResolver($resolver)
+    protected function setResolver($resolver)
     {
         $this->resolver = $resolver;
-
         return $this;
     }
 
@@ -218,7 +194,7 @@ class BladeRenderer extends AbstractRenderer
      *
      * @return  Dispatcher
      */
-    public function getDispatcher()
+    protected function getDispatcher()
     {
         if (!$this->dispatcher) {
             $this->dispatcher = new Dispatcher();
@@ -234,10 +210,9 @@ class BladeRenderer extends AbstractRenderer
      *
      * @return  static  Return self to support chaining.
      */
-    public function setDispatcher($dispatcher)
+    protected function setDispatcher($dispatcher)
     {
         $this->dispatcher = $dispatcher;
-
         return $this;
     }
 
@@ -246,7 +221,7 @@ class BladeRenderer extends AbstractRenderer
      *
      * @return  CompilerEngine
      */
-    public function getCompiler()
+    protected function getCompiler()
     {
         if (!$this->compiler) {
             $cache = $this->config('cache');
@@ -263,34 +238,28 @@ class BladeRenderer extends AbstractRenderer
 
     /**
      * Method to set property compiler
-     *
      * @param   CompilerEngine $compiler
-     *
      * @return  static  Return self to support chaining.
      */
-    public function setCompiler($compiler)
+    protected function setCompiler($compiler)
     {
         $this->compiler = $compiler;
-
         return $this;
     }
 
     /**
      * addCustomCompiler
-     *
      * @param   string   $name
      * @param   callable $compiler
      *
      * @return  static
      */
-    public function addCustomCompiler($name, $compiler)
+    protected function addCustomCompiler($name, $compiler)
     {
         if (!is_callable($compiler)) {
             throw new \InvalidArgumentException('Compiler should be callable.');
         }
-
         $this->customCompilers[$name] = $compiler;
-
         return $this;
     }
 
@@ -299,22 +268,19 @@ class BladeRenderer extends AbstractRenderer
      *
      * @return  \callable[]
      */
-    public function getCustomCompilers()
+    protected function getCustomCompilers()
     {
         return $this->customCompilers;
     }
 
     /**
      * Method to set property customCompiler
-     *
      * @param   \callable[] $customCompilers
-     *
      * @return  static  Return self to support chaining.
      */
-    public function setCustomCompilers(array $customCompilers)
+    protected function setCustomCompilers(array $customCompilers)
     {
         $this->customCompilers = $customCompilers;
-
         return $this;
     }
 }

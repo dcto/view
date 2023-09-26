@@ -1,12 +1,7 @@
 <?php 
-
 /**
-* 
-* @package view
-* @author  dc.To
-* @version 20230827
-* @copyright ©2023 dc team all rights reserved.
-*/
+ * @package \VM\View\Renderer
+ */
 namespace VM\View\Renderer;
 
 
@@ -18,14 +13,14 @@ use League\Plates\Extension\ExtensionInterface;
  *
  * @since  2.0
  */
-class PlatesRenderer extends AbstractRenderer
+class PlatesRenderer
 {
     /**
      * Property extensions.
      *
      * @var  ExtensionInterface[]
      */
-    protected $extensions = [];
+    protected $extension = '.tpl';
 
     /**
      * Method to get property Engine
@@ -37,16 +32,8 @@ class PlatesRenderer extends AbstractRenderer
     public function getEngine($new = false)
     {
         if (!$this->engine || $new) {
-            $this->engine = new PlatesEngine(
-                $this->getPath()[0]
-            );
-            foreach ($this->paths as $namespace => $folder) {
-                $this->engine->addFolder($namespace, $folder['folder'], $folder['fallback']);
-            }
-
-            foreach ($this->extensions as $extension) {
-                $this->engine->loadExtension($extension);
-            }
+            $this->engine = new PlatesEngine($this->getPath()[0]);
+            $this->engine->loadExtension($this->extension);
         }
         return $this->engine;
     }
@@ -63,9 +50,7 @@ class PlatesRenderer extends AbstractRenderer
         if (!($engine instanceof PlatesEngine)) {
             throw new \InvalidArgumentException('Engine object should be Mustache_Engine');
         }
-
         $this->engine = $engine;
-
         return $this;
     }
 
@@ -78,38 +63,8 @@ class PlatesRenderer extends AbstractRenderer
      * @return  string
      */
     public function render($file, $data = [])
-    {
-        $this->assign($data);        
-        return $this->getEngine()->render($this->findFile($file), $this->assign);
-    }
-
-    /**
-     * findFile
-     *
-     * @param string $file
-     * @param string $ext
-     *
-     * @return  string
-     */
-    public function findFile($file, $ext = '')
-    {
-        $ext = $ext ?: $this->config('extension', 'tpl');
-
-        return parent::findFile($file, $ext);
-    }
-
-    /**
-     * addExtension
-     *
-     * @param ExtensionInterface $extension
-     *
-     * @return  static
-     */
-    public function addExtension(ExtensionInterface $extension)
-    {
-        $this->extensions[] = $extension;
-
-        return $this;
+    {    
+        return $this->getEngine()->render($this->findFile($file), $this->assign($data)->assign);
     }
 
     /**
@@ -121,7 +76,7 @@ class PlatesRenderer extends AbstractRenderer
      *
      * @return  static
      */
-    public function addFolder($namespace, $folder, $fallback = false)
+    protected function addFolder($namespace, $folder, $fallback = false)
     {
         $this->paths[$namespace] = [
             'folder' => $folder,

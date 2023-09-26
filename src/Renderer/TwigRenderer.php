@@ -1,12 +1,7 @@
 <?php 
-
 /**
-* 
-* @package view
-* @author  dc.To
-* @version 20230827
-* @copyright ©2023 dc team all rights reserved.
-*/
+ * @package \VM\View\Renderer
+ */
 namespace VM\View\Renderer;
 
 /**
@@ -14,15 +9,8 @@ namespace VM\View\Renderer;
  *
  * @since 2.0
  */
-class TwigRenderer extends AbstractRenderer
+class TwigRenderer
 {
-    /**
-     * Property twig.
-     *
-     * @var  \Twig\Environment
-     */
-    protected $engine = null;
-
     /**
      * Property loader.
      *
@@ -35,7 +23,7 @@ class TwigRenderer extends AbstractRenderer
      *
      * @var  \Twig\Extension\ExtensionInterface[]
      */
-    protected $extensions = [];
+    protected $extension = '.twig';
 
     /**
      * Property debugExtension.
@@ -43,7 +31,7 @@ class TwigRenderer extends AbstractRenderer
      * @var  \Twig\Extension\DebugExtension
      */
     protected $debugExtension = null;
-
+    
     /**
      * render
      *
@@ -55,9 +43,7 @@ class TwigRenderer extends AbstractRenderer
      */
     public function render($file, $data = [])
     {
-        $file = pathinfo($file, PATHINFO_EXTENSION) === 'twig' ? $file : $file . '.twig';
-        $this->assign($data);
-        return $this->getEngine()->render($file, $this->assign);
+        return $this->getEngine()->render($file, $this->assign($data)->assign);
     }
 
     /**
@@ -68,7 +54,7 @@ class TwigRenderer extends AbstractRenderer
     public function getLoader()
     {
         if (!$this->loader) {
-            $this->loader = new \Twig\Loader\FilesystemLoader(iterator_to_array(clone $this->paths));
+            $this->loader = new \Twig\Loader\FilesystemLoader($this->getPath());
         }
         return $this->loader;
     }
@@ -83,7 +69,6 @@ class TwigRenderer extends AbstractRenderer
     public function setLoader(\Twig\Loader\LoaderInterface $loader)
     {
         $this->loader = $loader;
-
         return $this;
     }
 
@@ -97,7 +82,6 @@ class TwigRenderer extends AbstractRenderer
     public function addExtension(\Twig\Extension\ExtensionInterface $extension)
     {
         $this->extensions[] = $extension;
-
         return $this;
     }
 
@@ -113,7 +97,6 @@ class TwigRenderer extends AbstractRenderer
         if (!($this->engine instanceof \Twig\Environment) || $new) {
             $this->engine = new \Twig\Environment($this->getLoader(), $this->config);
         }
-
         return $this->engine;
     }
 
@@ -129,9 +112,8 @@ class TwigRenderer extends AbstractRenderer
         if (!($twig instanceof \Twig\Environment)) {
             throw new \InvalidArgumentException('Engine object should be Twig\Environment');
         }
-
         $this->engine = $twig;
-
+        
         return $this;
     }
 
@@ -145,7 +127,6 @@ class TwigRenderer extends AbstractRenderer
         if (!$this->debugExtension) {
             $this->debugExtension = new \Twig\Extension\DebugExtension();
         }
-
         return $this->debugExtension;
     }
 
@@ -168,10 +149,10 @@ class TwigRenderer extends AbstractRenderer
      *
      * @return  \Twig\Extension\ExtensionInterface[]
      */
-    public function getExtensions()
-    {
-        return $this->extensions;
-    }
+    // public function getExtensions()
+    // {
+    //     return $this->extensions;
+    // }
 
     /**
      * Method to set property extensions
@@ -180,10 +161,9 @@ class TwigRenderer extends AbstractRenderer
      *
      * @return  static  Return self to support chaining.
      */
-    public function setExtensions($extensions)
-    {
-        $this->extensions = $extensions;
-
-        return $this;
-    }
+    // public function setExtensions($extensions)
+    // {
+    //     $this->extensions = $extensions;
+    //     return $this;
+    // }
 }
