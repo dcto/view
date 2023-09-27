@@ -41,7 +41,7 @@ class TwigRenderer
      * @throws  \UnexpectedValueException
      * @return  string
      */
-    public function render($file, $data = [])
+    public function render($file = null, $data = [])
     {
         return $this->getEngine()->render($file, $this->assign($data)->assign);
     }
@@ -66,7 +66,7 @@ class TwigRenderer
      *
      * @return  TwigRenderer  Return self to support chaining.
      */
-    public function setLoader(\Twig\Loader\LoaderInterface $loader)
+    public function setLoader(\Twig\Loader\LoaderInterface $loader = null)
     {
         $this->loader = $loader;
         return $this;
@@ -107,10 +107,10 @@ class TwigRenderer
      *
      * @return  TwigRenderer  Return self to support chaining.
      */
-    public function setEngine($twig)
+    public function setEngine($twig = null)
     {
         if (!($twig instanceof \Twig\Environment)) {
-            throw new \InvalidArgumentException('Engine object should be Twig\Environment');
+            throw new \InvalidArgumentException('Engine object should be instaceof Twig\Environment');
         }
         $this->engine = $twig;
         

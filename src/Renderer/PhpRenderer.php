@@ -9,7 +9,6 @@ namespace VM\View\Renderer;
  */
 class PhpRenderer
 {
-
     /**
      * Property file.
      *
