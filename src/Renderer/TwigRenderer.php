@@ -23,7 +23,7 @@ class TwigRenderer
      *
      * @var  \Twig\Extension\ExtensionInterface[]
      */
-    protected $extension = '.twig';
+    protected $extension = 'twig';
 
     /**
      * Property debugExtension.

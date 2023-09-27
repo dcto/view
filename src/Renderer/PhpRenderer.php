@@ -117,13 +117,10 @@ class PhpRenderer
      *
      * @return  string
      */
-    public function load($file, $data = null)
+    public function load($file, $data = [])
     {
-        $data = array_merge($this->assign, (array) $data);
-
         $renderer = $this->createSelf();
-
-        return $renderer->render($file, $data);
+        return $renderer->render($file, $this->assign($data)->assign);
     }
 
     /**
