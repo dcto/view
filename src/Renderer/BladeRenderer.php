@@ -95,7 +95,7 @@ class BladeRenderer extends Renderer
     public function setEngine($blade)
     {
         if (!($blade instanceof Factory)) {
-            throw new \InvalidArgumentException('Engine object should be Illuminate\View\Environment.');
+            throw new \InvalidArgumentException('Invalid Engine Illuminate\View\Environment.');
         }
         $this->engine = $blade;
         return $this;

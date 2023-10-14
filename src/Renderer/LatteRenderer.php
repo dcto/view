@@ -7,42 +7,38 @@
 namespace VM\View\Renderer;
 
 use VM\View\Renderer;
-use League\Plates\Engine as PlatesEngine;
 
 /**
  * The PlatesRenderer class.
  * @since  2.0
  */
-class PlatesRenderer extends Renderer
+class LatteRenderer extends Renderer
 {
     /**
      * Method to get property Engine
      *
-     * @param   boolean $new
+     * @param boolean $new
      *
-     * @return  PlatesEngine
+     * @return \Latte\Engine
      */
     public function getEngine($new = false)
     {
         if (!$this->engine || $new) {
-            $paths = $this->getPath();
-            $this->engine = new PlatesEngine(array_shift($paths));
-            array_map(function($path){
-                $this->engine->addFolder($path, $path);
-            }, $paths);
+            $this->engine = new \Latte\Engine;
+            $this->engine->setTempDirectory($this->config('cache'))->setStrictTypes(false);
         }
         return $this->engine;
     }
 
     /**
      * Method to set property engine
-     * @param PlatesEngine $engine
+     * @param \Latte\Engine $engine
      * @return static  Return self to support chaining.
      */
     public function setEngine($engine)
     {
-        if (!($engine instanceof PlatesEngine)) {
-            throw new \InvalidArgumentException('Invalid Engine Instance of '. __CLASS__);
+        if (!($engine instanceof \Latte\Engine)) {
+            throw new \InvalidArgumentException('Invalid Engine '. __CLASS__);
         }
         $this->engine = $engine;
         return $this;
@@ -57,7 +53,7 @@ class PlatesRenderer extends Renderer
      * @return  string
      */
     public function render($file, ...$data)
-    {    
-        return $this->getEngine()->render($this->load($file), $this->assign(...$data)->assign);
+    {   
+        return $this->getEngine()->renderToString($this->getPath('current')._DS_.$this->load($file), $this->assign(...$data)->assign);
     }
 }

@@ -44,7 +44,7 @@ namespace VM\View;
     /**
      * Property engine.
      *
-     * @var \Twig\Environment|\League\Plates\Engine|Illuminate\View\Factory
+     * @var \Twig\Environment|\League\Plates\Engine|Illuminate\View\Factory|\Latte\Engine
      */
     protected $engine;
     
@@ -134,10 +134,11 @@ namespace VM\View;
      * getPath
      * @return array
      */
-    public function getPath()
+    public function getPath($method = null)
     {
-        return iterator_to_array(clone $this->paths);
+        return $method ? $this->paths->$method() : iterator_to_array($this->paths);
     }
+
 
     /**
      * addPath

@@ -96,7 +96,7 @@ class TwigRenderer extends Renderer
     public function setEngine($twig = null)
     {
         if (!($twig instanceof \Twig\Environment)) {
-            throw new \InvalidArgumentException('Engine object should be instaceof Twig\Environment');
+            throw new \InvalidArgumentException('Invalid Engine Instaceof Twig\Environment');
         }
         $this->engine = $twig;
         
