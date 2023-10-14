@@ -14,6 +14,9 @@ use VM\View\Renderer;
  */
 class TwigRenderer extends Renderer
 {
+    protected $config = [
+        
+    ];
     /**
      * Property loader.
      *
@@ -47,9 +50,9 @@ class TwigRenderer extends Renderer
      *
      * @return  \Twig\Loader\LoaderInterface
      */
-    public function getLoader()
+    public function getLoader($new = false)
     {
-        if (!$this->loader) {
+        if (!$this->loader || $new) {
             $this->loader = new \Twig\Loader\FilesystemLoader($this->getPath());
         }
         return $this->loader;
@@ -78,7 +81,7 @@ class TwigRenderer extends Renderer
     public function getEngine($new = false)
     {
         if (!($this->engine instanceof \Twig\Environment) || $new) {
-            $this->engine = new \Twig\Environment($this->getLoader(), $this->config);
+            $this->engine = new \Twig\Environment($this->getLoader($new), $this->config);
         }
         return $this->engine;
     }

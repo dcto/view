@@ -8,7 +8,6 @@ namespace VM\View\Renderer;
 
 use VM\View\Renderer;
 use League\Plates\Engine as PlatesEngine;
-use League\Plates\Extension\ExtensionInterface;
 
 /**
  * The PlatesRenderer class.

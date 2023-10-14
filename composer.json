@@ -25,7 +25,8 @@
   },
 
   "require": {
-    "varimax/varimax":"dev-master|^3.0"
+    "varimax/varimax":"dev-master|^3.0",
+    "twig/twig": "2.15"
   },
 
   "suggest": {

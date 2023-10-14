@@ -62,8 +62,8 @@ namespace VM\View;
     public function __construct()
     {
         $this->paths = new \SplPriorityQueue();
+        $this->paths->insert(app_dir('View'), 100);
         $this->config(['cache'=>runtime('view', _APP_)]);
-        $this->path(app_dir('View'));
     }
 
      /**
@@ -98,6 +98,7 @@ namespace VM\View;
             return isset($this->config[$item]) ? $this->config[$item] : $default;
         }else if(is_array($item)){
             $this->config = array_merge($this->config, $item);
+            $this->getEngine(true);
         }
         return $this;
 	}
@@ -112,8 +113,9 @@ namespace VM\View;
 	{
         $i = 1;
         array_map(function($path)use(&$i){
-            $this->addPath($path, 100 - ($i++ * 10));
+            $this->paths->insert($path, 100 - ($i++ * 10));
         }, $paths);
+        $this->getEngine(true);
         return $this;
 	}
 
@@ -124,17 +126,8 @@ namespace VM\View;
      */
     protected function load($file)
     {
-        // if(pathinfo($file, PATHINFO_EXTENSION) != $this->extension){
-        //     $file = str_replace('.', _DS_, trim($file, '.')).'.'.$this->extension;
-        // }
-
         return $file;
-        // return realpath($path._DS_.$file);
-        // foreach($this->getPath() as $path){
-        //     echo 'ddd';
-        //     if(is_file($path._DS_.$file)) return realpath($path._DS_.$file);
-        // }
-        throw new \UnexpectedValueException(sprintf('File: %s not found. in paths queue: %s', $file, join(',',$this->getPath()) ));
+        //throw new \UnexpectedValueException(sprintf('File: %s not found. in paths queue: %s', $file, join(',',$this->getPath()) ));
     }
 
     /**
@@ -155,6 +148,7 @@ namespace VM\View;
     public function addPath($path, $priority = 100)
     {
         $this->paths->insert($path, $priority);
+        $this->getEngine(true);
         return $this;
     }
 

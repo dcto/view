@@ -82,7 +82,7 @@ class BladeRenderer extends Renderer
     public function getEngine($new = false)
     {
         if (!$this->engine || $new) {
-            $this->engine = new Factory($this->getResolver(), $this->getFinder(), $this->getDispatcher());
+            $this->engine = new Factory($this->getResolver(), $this->getFinder($new), $this->getDispatcher());
         }
         return $this->engine;
     }
@@ -131,9 +131,9 @@ class BladeRenderer extends Renderer
      *
      * @return  FileViewFinder
      */
-    protected function getFinder()
+    protected function getFinder($new = false)
     {
-        if (!$this->finder) {
+        if (!$this->finder || $new) {
             $this->finder = new FileViewFinder($this->getFilesystem(), $this->getPath());
         }
         return $this->finder;
