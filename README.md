@@ -12,36 +12,33 @@
 
 ##### Step.1 
 ```
+composer require varimax/varimax
 composer install varimax/view 
 ```
 
-##### Step.2
-Add the following providers code to your `config.php` file:
+The varimax view service methods
 ```php
-<?php
-    'view'=>[
-        'driver' => 'php', //php|blade|plates|twig
-        #debug模式
-        'debug' => getenv('DEBUG') ? true : false,
 
-        #缓存路径 false|path
-        'cache' => runtime('view', _APP_),
+make('view')->config(string $key, mixed $value)
+make('view')->assign(...$values)
+make('view')->render(string $template, array $data = [])
+make('view')->path(...$paths)
+make('view')->addPath(string $path)
+make('view')->getPath()
+make('view')->getEngine($new = false)
+make('view')->setEngine($engine)
 
-        #reload重新编译
-        'reload' => getenv('DEBUG') ? true : false,
-
-        #视图文件后缀
-        'append'  => 'twig',
-        
-        #自动转义
-        'autoescape'=>true,
-    ],
+```
 
 
-    'providers' => [
-        \VM\View\ViewServiceProvider::class
-    ]
-?>
+##### Step.2
+Add the following service config to your `config.php` file:
+```php
+'service' => [
+   // \VM\View\ViewServiceProvider::Blade()  //Blade Template Engine
+  //  \VM\View\ViewServiceProvider::Plates() //Plates Template Engine
+    \VM\View\ViewServiceProvider::Twig()    //Twig Template Engine
+]
 ```
 
 
@@ -50,5 +47,8 @@ Add the following providers code to your `config.php` file:
 add the following code to your `controller`:
 
 ```php
-make('view')->blade($TEMPLATE_DIR)->config(array $CONFIG);
+$data1 = ['test'=>'test'];
+$data2 = ['test'=>'test2'];
+
+make('view')->render('template.html', $data1, $data2);
 ```

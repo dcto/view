@@ -4,17 +4,19 @@
  */
 namespace VM\View\Renderer;
 
+use VM\View\Renderer;
+
 /**
  * @since 2.0
  */
-class PhpRenderer
+class PhpRenderer extends Renderer
 {
     /**
-     * Property file.
+     * Property parent.
      *
-     * @var string
+     * @var  PhpRenderer
      */
-    protected $file;
+    protected $parent = null;
 
     /**
      * Property block.
@@ -22,6 +24,13 @@ class PhpRenderer
      * @var  array
      */
     protected $block = [];
+
+    /**
+     * Property extends.
+     *
+     * @var  string
+     */
+    protected $extend = null;
 
     /**
      * Property blockQueue.
@@ -37,20 +46,6 @@ class PhpRenderer
      */
     protected $currentBlock = null;
 
-    /**
-     * Property extends.
-     *
-     * @var  string
-     */
-    protected $extend = null;
-
-    /**
-     * Property parent.
-     *
-     * @var  PhpRenderer
-     */
-    protected $parent = null;
-
     /** @var string */
     protected $extension = 'php';
     
@@ -63,20 +58,10 @@ class PhpRenderer
      * @throws  \UnexpectedValueException
      * @return  string
      */
-    public function render($file, $__data = [])
+    public function render($file, $__data)
     {
-        $__filePath = $this->findFile($file);
-        if (!$__filePath) {
-            $__paths = $this->getPath();
-            $__paths = "\n " . implode(" |\n ", $__paths);
-            throw new \UnexpectedValueException(sprintf('File: %s not found. Paths in queue: %s', $file, $__paths));
-        }
-
         foreach ($__data as $key => $value) {
-            if ($key === 'data') {
-                $key = '_data';
-            }
-
+            $key === 'data' &&  $key = '_data';
             $$key = $value;
         }
 
@@ -86,7 +71,7 @@ class PhpRenderer
         ob_start();
 
         // Load the layout.
-        include $__filePath;
+        require $this->load($file);
 
         // Get the layout contents.
         $output = ob_get_clean();
@@ -97,14 +82,12 @@ class PhpRenderer
         }
 
         /** @var $parent phpRenderer */
-        $parent = $this->createSelf();
+        $parent = $this->newInstance();
 
         foreach ($this->block as $name => $block) {
             $parent->setBlock($name, $block);
         }
-
-        $output = $parent->render($this->extend, $this->assign($__data)->assign);
-
+        $output = $parent->render($this->extend, $__data);
         return $output;
     }
 
@@ -116,9 +99,9 @@ class PhpRenderer
      *
      * @return  string
      */
-    public function load($file, $data = [])
+    public function load($file, ...$data)
     {
-        $renderer = $this->createSelf();
+        $renderer = $this->newInstance();
         return $renderer->render($file, $this->assign($data)->assign);
     }
 
@@ -134,7 +117,7 @@ class PhpRenderer
         }
 
         if (!$this->parent) {
-            $this->parent = $this->createSelf();
+            $this->parent = $this->newInstance();
 
             $this->parent->render($this->extend, $this->assign);
         }
@@ -143,11 +126,11 @@ class PhpRenderer
     }
 
     /**
-     * createSelf
+     * newInstance
      *
      * @return  static
      */
-    protected function createSelf()
+    protected function newInstance()
     {
         return new static($this->getPath(), $this->config);
     }
@@ -166,14 +149,21 @@ class PhpRenderer
         if ($this->extend) {
             throw new \LogicException('Please just extend one file.');
         }
-
         $this->extend = $name;
     }
 
-    public function setEngine($new = false){
+    /**
+     * set Engine
+     * @return self
+     */
+    public function setEngine($engine = null){
         return $this;
     }
 
+    /**
+     * get Engine
+     * @return \stdClass
+     */
     public function getEngine($new = false){
         return new \stdClass;
     }
@@ -196,7 +186,7 @@ class PhpRenderer
      * @param string $name
      * @param string $content
      *
-     * @return  PhpRenderer  Return self to support chaining.
+     * @return PhpRenderer  Return self to support chaining.
      */
     public function setBlock($name, $content = '')
     {
@@ -230,16 +220,12 @@ class PhpRenderer
     public function endblock()
     {
         $name = $this->getBlockQueue()->pop();
-
         // If this block name not exists on parent level, we just echo inner content.
         if (!empty($this->block[$name])) {
             ob_get_clean();
-
             echo $this->block[$name];
-
             return;
         }
-
         // Get the layout contents.
         echo $this->block[$name] = ob_get_clean();
     }
@@ -265,10 +251,8 @@ class PhpRenderer
      */
     public function reset()
     {
-        $this->file = null;
         $this->extend = null;
         $this->parent = null;
-        $this->assign = null;
         $this->block = [];
         $this->blockQueue = null;
         $this->currentBlock = null;

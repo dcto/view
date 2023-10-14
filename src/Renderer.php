@@ -9,37 +9,30 @@
 */
 namespace VM\View;
 
-use Illuminate\Support\Traits\Macroable;
-
 /**
  * Dynamic call method
  * @method config(string $key, mixed $value)
- * @method assign(string $key, mixed $value)
+ * @method assign(...$values)
  * @method render(string $template, array $data = [])
- * @method escape()
  * @method path(...$paths)
  * @method addPath(string $path)
  * @method getPath()
- * @method exist(string $file)
- * @method getEngine()
+ * @method getEngine($new = false)
  * @method setEngine($engine)
  * @return mixed
  */
-class Renderer {
-
-    use Macroable;
+ abstract class Renderer {
 
     /**
      * assign variable.
+     * @var array
      */
-    protected $assign;
+    protected $assign = [];
 
     /**
-     * view config
+     * view cache
      */
-    protected $config = [
-        'cache'=>_DOC_._DS_.'runtime'._DS_.'view'._DS_._APP_
-    ];
+    protected $config = [];
 
     /**
      * Property paths.
@@ -61,22 +54,16 @@ class Renderer {
     protected $renderer;
 
     /**
-     * extensions.
-     * @var string
-     */
-    protected $extension;
-
-    /**
      * Class init.
      *
-     * @param Renderer\AbstractRenderer $renderer
+     * @param Renderer $renderer
      * @param array             $config
      */
-    public function __construct($render = null)
+    public function __construct()
     {
-        $render && $this->make($render);
         $this->paths = new \SplPriorityQueue();
-        $this->path(_DIR_._DS_.'View');
+        $this->config(['cache'=>runtime('view', _APP_)]);
+        $this->path(app_dir('View'));
     }
 
      /**
@@ -85,14 +72,20 @@ class Renderer {
 	 */
 	public function assign(...$values) 
     {
-        $values  && array_map(function($value){
-            if ($value instanceof \Traversable) {
-                $value = iterator_to_array($value);
-            }else if (is_object($value)) {
-                $value = get_object_vars($value);
-            }
-            $this->assign = array_merge($this->assign, $value);
-        }, $values);
+        if(count($values)==2 && is_string($values[0])){
+            $this->assign[$values[0]] = $values[1];
+        }else{
+            $this->assign = array_merge($this->assign, ...array_map(function($value){
+                if ($value instanceof \Traversable) {
+                    return iterator_to_array($value);
+                }else if (is_object($value)) {
+                    return get_object_vars($value);
+                }else{
+                    return $value;
+                }
+        }, $values));
+        }
+        
 		return $this;
 	}
 
@@ -129,24 +122,19 @@ class Renderer {
      * @param string $file
      * @return  string
      */
-    protected function findFile($file)
+    protected function load($file)
     {
-        if(pathinfo($file, PATHINFO_EXTENSION) != $this->extension){
-            $file = str_replace('.', _DS_, $file).trim($file, '.'). $this->extension;
-        }
-        return array_map(function($path) use($file){
-            if(is_file($path._DS_.$file)) return realpath($path._DS_.$file);
-        }, $this->getPath());
-    }
+        // if(pathinfo($file, PATHINFO_EXTENSION) != $this->extension){
+        //     $file = str_replace('.', _DS_, trim($file, '.')).'.'.$this->extension;
+        // }
 
-    /**
-     * @param string $file
-     * @param string $ext
-     * @return  bool
-     */
-    protected function exist(string $file, string $ext = ''): bool
-    {
-        return $this->findFile($file, $ext) !== null;
+        return $file;
+        // return realpath($path._DS_.$file);
+        // foreach($this->getPath() as $path){
+        //     echo 'ddd';
+        //     if(is_file($path._DS_.$file)) return realpath($path._DS_.$file);
+        // }
+        throw new \UnexpectedValueException(sprintf('File: %s not found. in paths queue: %s', $file, join(',',$this->getPath()) ));
     }
 
     /**
@@ -155,7 +143,7 @@ class Renderer {
      */
     public function getPath()
     {
-        return iterator_to_array($this->paths);
+        return iterator_to_array(clone $this->paths);
     }
 
     /**
@@ -170,61 +158,22 @@ class Renderer {
         return $this;
     }
 
+    /**
+     * render method
+     * @param string $file
+     * @param array $data
+     */
+    abstract public function render($file, ...$data);
 
     /**
-     * make renderer
-     * @param string $renderer
-     */
-    public function make($render, $config = [], $path = []){
-        if(!$this->renderer){
-            $this->mixin(new (sprintf(__NAMESPACE__.'\\Renderer\\%sRenderer', ucfirst($render))));
-        }
-        $this->path($path)->config($config);
-        return $this;
-    }
+     * Method getEngine
+     * @param bool $new
+     */ 
+    abstract public function getEngine($new = false);
 
     /**
-     * @param array $config
-     * @param string $path
-     * @return VM\View\Renderer\PhpRenderer
-     */
-    public function php(array $config = [], $path = null){
-        return $this->make(__FUNCTION__, $config, $path);
-    }
-
-    /**
-     * @param array $config
-     * @param string $path
-     * @return VM\View\Renderer\BladeRenderer
-     */
-    public function blade(array $config = [], $path = null){
-        return $this->make(__FUNCTION__, $config, $path);
-    }
-
-    /**
-     * @param array $config
-     * @param string $path
-     * @return VM\View\Renderer\PlatesRenderer
-     */
-    public function plates(array $config = [], $path = null){
-        return $this->make(__FUNCTION__, $config, $path);
-    }
-
-    /**
-     * @param array $config
-     * @param string $path
-     * @return VM\View\Renderer\TwigRenderer
-     */
-    public function twig(array $config = [], $path = null){
-        return $this->make(__FUNCTION__, $config, $path);
-    }
-
-
-    // public function __call($name, $arguments)
-    // {
-    //     if (! method_exists($this->renderer, $name)) {
-    //         throw new \BadMethodCallException(sprintf('Call to undefined method %s::%s()', get_class($this), $name));
-    //     }
-    //     return $this->renderer->{$name}(...$arguments);
-    // }
+     * Method getEngine
+     * @param bool $new
+     */ 
+    abstract public function setEngine(mixed $engine);
 }

@@ -1,27 +1,21 @@
 <?php 
+
 /**
  * @package \VM\View\Renderer
  */
+
 namespace VM\View\Renderer;
 
-
+use VM\View\Renderer;
 use League\Plates\Engine as PlatesEngine;
 use League\Plates\Extension\ExtensionInterface;
 
 /**
  * The PlatesRenderer class.
- *
  * @since  2.0
  */
-class PlatesRenderer
+class PlatesRenderer extends Renderer
 {
-    /**
-     * Property extensions.
-     *
-     * @var  ExtensionInterface[]
-     */
-    protected $extension = '.tpl';
-
     /**
      * Method to get property Engine
      *
@@ -32,18 +26,19 @@ class PlatesRenderer
     public function getEngine($new = false)
     {
         if (!$this->engine || $new) {
-            $this->engine = new PlatesEngine($this->getPath()[0]);
-            $this->engine->loadExtension($this->extension);
+            $paths = $this->getPath();
+            $this->engine = new PlatesEngine(array_shift($paths));
+            array_map(function($path){
+                $this->engine->addFolder($path, $path);
+            }, $paths);
         }
         return $this->engine;
     }
 
     /**
      * Method to set property engine
-     *
-     * @param   PlatesEngine $engine
-     *
-     * @return  static  Return self to support chaining.
+     * @param PlatesEngine $engine
+     * @return static  Return self to support chaining.
      */
     public function setEngine($engine)
     {
@@ -62,27 +57,8 @@ class PlatesRenderer
      *
      * @return  string
      */
-    public function render($file, $data = [])
+    public function render($file, ...$data)
     {    
-        return $this->getEngine()->render($this->findFile($file), $this->assign($data)->assign);
-    }
-
-    /**
-     * addFolder
-     *
-     * @param   string  $namespace
-     * @param   string  $folder
-     * @param   boolean $fallback
-     *
-     * @return  static
-     */
-    protected function addFolder($namespace, $folder, $fallback = false)
-    {
-        $this->paths[$namespace] = [
-            'folder' => $folder,
-            'fallback' => $fallback,
-        ];
-
-        return $this;
+        return $this->getEngine()->render($this->load($file), $this->assign(...$data)->assign);
     }
 }

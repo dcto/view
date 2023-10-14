@@ -2,7 +2,7 @@
   "name": "varimax/view",
   "description": "Varimax View Module",
   "type": "project",
-  "keywords": ["php","php framework", "varimax view", "twig", "plates", "edge", "mustache"],
+  "keywords": ["php","php template", "varimax view", "twig", "plates"],
   "license": "MIT",
   "prefer-stable" : true,
   "minimum-stability": "dev",
@@ -31,6 +31,6 @@
   "suggest": {
     "twig/twig": "Twig ~2.6.x view engine",
     "league/plates": "Plates ^3.0 view engine",
-    "illuminate/view": "Blade ^7.0 view engine"
+    "illuminate/view": "Blade ^8.0 view engine"
   }
 }

@@ -1,36 +1,32 @@
 <?php 
+
 /**
  * @package \VM\View\Renderer
  */
 namespace VM\View\Renderer;
+
+use VM\View\Renderer;
 
 /**
  * Class TwigRenderer
  *
  * @since 2.0
  */
-class TwigRenderer
+class TwigRenderer extends Renderer
 {
     /**
      * Property loader.
      *
      * @var  \TwigLoaderInterface
      */
-    protected $loader = null;
-
-    /**
-     * Property extensions.
-     *
-     * @var  \Twig\Extension\ExtensionInterface[]
-     */
-    protected $extension = 'twig';
+    protected $loader;
 
     /**
      * Property debugExtension.
      *
      * @var  \Twig\Extension\DebugExtension
      */
-    protected $debugExtension = null;
+    protected $debugExtension;
     
     /**
      * render
@@ -41,9 +37,9 @@ class TwigRenderer
      * @throws  \UnexpectedValueException
      * @return  string
      */
-    public function render($file = null, $data = [])
+    public function render($file, ...$data)
     {
-        return $this->getEngine()->render($file, $this->assign($data)->assign);
+        return $this->getEngine()->render($this->load($file), $this->assign(...$data)->assign);
     }
 
     /**
@@ -69,19 +65,6 @@ class TwigRenderer
     public function setLoader(\Twig\Loader\LoaderInterface $loader = null)
     {
         $this->loader = $loader;
-        return $this;
-    }
-
-    /**
-     * addExtension
-     *
-     * @param \Twig\Extension\ExtensionInterface $extension
-     *
-     * @return  static
-     */
-    public function addExtension(\Twig\Extension\ExtensionInterface $extension)
-    {
-        $this->extensions[] = $extension;
         return $this;
     }
 
@@ -116,54 +99,4 @@ class TwigRenderer
         
         return $this;
     }
-
-    /**
-     * Method to get property DebugExtension
-     *
-     * @return  \Twig\Extension\DebugExtension
-     */
-    public function getDebugExtension()
-    {
-        if (!$this->debugExtension) {
-            $this->debugExtension = new \Twig\Extension\DebugExtension();
-        }
-        return $this->debugExtension;
-    }
-
-    /**
-     * Method to set property debugExtension
-     *
-     * @param   \Twig\Extension\ExtensionInterface $debugExtension
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setDebugExtension(\Twig\Extension\ExtensionInterface $debugExtension)
-    {
-        $this->debugExtension = $debugExtension;
-
-        return $this;
-    }
-
-    /**
-     * Method to get property Extensions
-     *
-     * @return  \Twig\Extension\ExtensionInterface[]
-     */
-    // public function getExtensions()
-    // {
-    //     return $this->extensions;
-    // }
-
-    /**
-     * Method to set property extensions
-     *
-     * @param   \Twig\Extension\ExtensionInterface[] $extensions Twig extenions
-     *
-     * @return  static  Return self to support chaining.
-     */
-    // public function setExtensions($extensions)
-    // {
-    //     $this->extensions = $extensions;
-    //     return $this;
-    // }
 }

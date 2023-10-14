@@ -4,6 +4,7 @@
  */
 namespace VM\View\Renderer;
 
+use VM\View\Renderer;
 use Illuminate\View\Factory;
 use Illuminate\Events\Dispatcher;
 use Illuminate\View\FileViewFinder;
@@ -12,12 +13,12 @@ use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Engines\CompilerEngine;
 use Illuminate\View\Engines\EngineResolver;
 
+
 /**
  * The BladeRenderer class.
- *
  * @since  2.0
  */
-class BladeRenderer
+class BladeRenderer extends Renderer
 {
     /**
      * Property filesystem.
@@ -57,28 +58,25 @@ class BladeRenderer
     /**
      * Property customCompiler.
      *
-     * @var  callable[]
+     * @var callable[]
      */
     protected $customCompilers = [];
 
     /**
      * render
-     *
      * @param string $file
      * @param array  $data
-     *
-     * @return  string
+     * @return string
      */
-    public function render($file, $data = [])
+    public function render($file, ...$data)
     {
-        return $this->getEngine()->make($file, $this->assign($data)->$data)->render();
+        return $this->getEngine()->make($this->load($file), $this->assign(...$data)->assign)->render();
     }
 
     /**
      * Method to get property Blade
      *
      * @param bool $new
-     *
      * @return  Factory
      */
     public function getEngine($new = false)
@@ -91,7 +89,7 @@ class BladeRenderer
 
     /**
      * Method to set property blade
-     * @param   Factory $blade
+     * @param  Factory $blade
      * @return  static  Return self to support chaining.
      */
     public function setEngine($blade)
@@ -163,12 +161,8 @@ class BladeRenderer
     {
         if (!$this->resolver) {
             $self = $this;
-
             $this->resolver = new EngineResolver();
-
-            $this->resolver->register(
-                'blade',
-                function () use ($self) {
+            $this->resolver->register('blade', function () use ($self) {
                     return $self->getCompiler();
                 }
             );

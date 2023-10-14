@@ -1,4 +1,5 @@
 <?php
+
 /**
 * 
 * @package view
@@ -10,12 +11,25 @@ namespace VM\View;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;
+
 /**
  * Class View
  * @since 2.0
  */
 class ViewServiceProvider extends ServiceProvider implements DeferrableProvider
 {
+    /**
+     * The View Engine Renderer
+     */
+    static $view;
+
+	/**
+	 * Indicates if loading of the provider is deferred.
+	 *
+	 * @var bool
+	 */
+	protected $defer = false;
+    
 	/**
      * Register view service provider.
      *
@@ -23,6 +37,15 @@ class ViewServiceProvider extends ServiceProvider implements DeferrableProvider
      */
     public function register()
     {
-        $this->app->singleton('view', Renderer::class);
+        $this->app->singleton('view',__NAMESPACE__.static::$view);
+    }
+
+    /**
+     * Set View Engine
+     */
+    public static function __callStatic($view, $arguments)
+    {
+        static::$view = sprintf("\Renderer\%sRenderer", $view);
+        return static::class;
     }
 }
