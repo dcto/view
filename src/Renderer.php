@@ -44,7 +44,7 @@ namespace VM\View;
     /**
      * Property engine.
      *
-     * @var \Twig\Environment|\League\Plates\Engine|Illuminate\View\Factory|\Latte\Engine
+     * @var \Twig\Environment|\League\Plates\Engine|Illuminate\View\Factory|\Latte\Engine|\Mustache_Engine
      */
     protected $engine;
     
@@ -132,7 +132,7 @@ namespace VM\View;
 
     /**
      * getPath
-     * @return array
+     * @return array|string
      */
     public function getPath($method = null)
     {

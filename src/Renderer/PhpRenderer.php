@@ -6,9 +6,6 @@ namespace VM\View\Renderer;
 
 use VM\View\Renderer;
 
-/**
- * @since 2.0
- */
 class PhpRenderer extends Renderer
 {
     /**

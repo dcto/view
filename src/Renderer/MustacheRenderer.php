@@ -8,7 +8,8 @@ namespace VM\View\Renderer;
 
 use VM\View\Renderer;
 
-class LatteRenderer extends Renderer
+
+class MustacheRenderer extends Renderer
 {
     /**
      * Method to get property Engine
@@ -20,23 +21,25 @@ class LatteRenderer extends Renderer
     public function getEngine($new = false)
     {
         if (!$this->engine || $new) {
-            $this->engine = new \Latte\Engine;
-            $this->engine->setLoader(new \Latte\Loaders\FileLoader($this->getPath('current')));
-            $this->engine->setTempDirectory($this->config('cache'))->setStrictTypes(false);
             
-            $this->engine::VERSION > 3.0 && $this->engine->addExtension(new \Latte\Essential\RawPhpExtension);
+            $config['loader'] = new \Mustache_Loader_FilesystemLoader($this->getPath('current'));
+            while($this->paths->valid()){ 
+                $config['partials_loader'] = new \Mustache_Loader_FilesystemLoader($this->paths->current());
+                $this->paths->next(); 
+            } 
+            $this->engine = new \Mustache_Engine($config+$this->config);
         }
         return $this->engine;
     }
 
     /**
      * Method to set property engine
-     * @param \Latte\Engine $engine
+     * @param \Mustache_Engine $engine
      * @return static  Return self to support chaining.
      */
     public function setEngine($engine)
     {
-        if (!($engine instanceof \Latte\Engine)) {
+        if (!($engine instanceof \Mustache_Engine)) {
             throw new \InvalidArgumentException('Invalid Engine '. __CLASS__);
         }
         $this->engine = $engine;
@@ -53,6 +56,6 @@ class LatteRenderer extends Renderer
      */
     public function render($file, ...$data)
     {   
-        return $this->getEngine()->renderToString($this->load($file), $this->assign(...$data)->assign);
+        return $this->getEngine()->render($this->getPath('current')._DS_.$this->load($file), $this->assign(...$data)->assign);
     }
 }

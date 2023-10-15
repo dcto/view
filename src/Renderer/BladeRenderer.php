@@ -14,10 +14,6 @@ use Illuminate\View\Engines\CompilerEngine;
 use Illuminate\View\Engines\EngineResolver;
 
 
-/**
- * The BladeRenderer class.
- * @since  2.0
- */
 class BladeRenderer extends Renderer
 {
     /**

@@ -25,11 +25,11 @@
   },
 
   "require": {
-    "varimax/varimax":"dev-master|^3.0",
-    "latte/latte": "^2.11"
+    "varimax/varimax":"dev-master|^3.0"
   },
 
   "suggest": {
+    "mustache/mustache": "Mustache ^2.* view engine",
     "latte/latte": "Latte ~2.11 view engine",
     "twig/twig": "Twig ~2.6.x view engine",
     "league/plates": "Plates ^3.0 view engine",

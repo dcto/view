@@ -13,8 +13,13 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;
 
 /**
- * Class View
- * @since 2.0
+ * Set View Engine
+ * @method static self Php() Using Php View Engine
+ * @method static self Blade() Using Blade View Engine
+ * @method static self Mustache() Using Mustache View Engine
+ * @method static self Latte() Using Latte View Engine
+ * @method static self Plates() Using Plates View Engine
+ * @method static self Twig() Using Twig View Engine
  */
 class ViewServiceProvider extends ServiceProvider implements DeferrableProvider
 {
@@ -40,9 +45,6 @@ class ViewServiceProvider extends ServiceProvider implements DeferrableProvider
         $this->app->singleton('view',__NAMESPACE__.static::$view);
     }
 
-    /**
-     * Set View Engine
-     */
     public static function __callStatic($view, $arguments)
     {
         static::$view = sprintf("\Renderer\%sRenderer", $view);
