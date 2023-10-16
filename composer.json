@@ -27,7 +27,14 @@
   "require": {
     "varimax/varimax":"dev-master|^3.0"
   },
+  "require-dev": {
+    "latte/latte": "^2.0",
+    "twig/twig": "^2.6",
+    "league/plates": "^3.5",
+    "illuminate/view": "^8.83",
+    "mustache/mustache": "^2.14"
 
+  },
   "suggest": {
     "twig/twig": "Twig ~2.6.x view engine",
     "latte/latte": "Latte ~2.11 view engine",
