@@ -18,8 +18,13 @@
 composer require varimax/view 
 ```
 
+##### Choice your template engine
 ```
+composer require latte/latte
+composer require league/plates
+composer require illuminate/view
 composer require twig/twig
+composer require mustache/mustache
 ```
 
 
@@ -28,8 +33,10 @@ Add the following service config to your `config.php` file:
 ```php
 'service' => [
    // \VM\View\ViewServiceProvider::Blade()  //Blade Template Engine
+   // \VM\View\ViewServiceProvider::Latte()  //Latte Template Engine
   //  \VM\View\ViewServiceProvider::Plates() //Plates Template Engine
     \VM\View\ViewServiceProvider::Twig()    //Twig Template Engine
+    // \VM\View\ViewServiceProvider::Mustache()    //Mustache Template Engine
 ]
 ```
 
