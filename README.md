@@ -3,31 +3,23 @@
 ### Supported Template Engine
 
 - Php (Native php engine template)
-- Twig https://twig.symfony.com/doc/2.x/
+- Twig https://twig.symfony.com/doc
 - Blade https://laravel.com/docs/8.x/blade
-- Plates https://platesphp.com/
+- Latte https://latte.nette.org
+- Plates https://platesphp.com
+- Mustache https://mustache.github.io
+
 
 
 ### Installation
 
 ##### Step.1 
 ```
-composer require varimax/varimax
-composer install varimax/view 
+composer require varimax/view 
 ```
 
-The varimax view service methods
-```php
-
-make('view')->config(string $key, mixed $value)
-make('view')->path(...$paths)
-make('view')->addPath(string $path)
-make('view')->getPath()
-make('view')->getEngine($new = false)
-make('view')->setEngine($engine)
-make('view')->assign(...$values)
-make('view')->render(string $template, array ...$values)
-
+```
+composer require twig/twig
 ```
 
 
@@ -50,5 +42,20 @@ add the following code to your `controller`:
 $data1 = ['test'=>'test'];
 $data2 = ['test'=>'test2'];
 
-make('view')->render('template.html', $data1, $data2);
+make('view')->render('template.twig', $data1, $data2);
+```
+
+
+### The varimax view service methods
+```php
+
+make('view')->config(string $key, mixed $value)
+make('view')->path(...$paths)
+make('view')->addPath(string $path)
+make('view')->getPath()
+make('view')->getEngine($new = false)
+make('view')->setEngine($engine)
+make('view')->assign(...$values)
+make('view')->render(string $template, array ...$values)
+
 ```
