@@ -20,13 +20,13 @@ The varimax view service methods
 ```php
 
 make('view')->config(string $key, mixed $value)
-make('view')->assign(...$values)
-make('view')->render(string $template, array $data = [])
 make('view')->path(...$paths)
 make('view')->addPath(string $path)
 make('view')->getPath()
 make('view')->getEngine($new = false)
 make('view')->setEngine($engine)
+make('view')->assign(...$values)
+make('view')->render(string $template, array ...$values)
 
 ```
 
