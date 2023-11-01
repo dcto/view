@@ -9,9 +9,6 @@
 */
 namespace VM\View;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Contracts\Support\DeferrableProvider;
-
 /**
  * Set View Engine
  * @method static self Php() Using Php View Engine
@@ -21,19 +18,12 @@ use Illuminate\Contracts\Support\DeferrableProvider;
  * @method static self Plates() Using Plates View Engine
  * @method static self Twig() Using Twig View Engine
  */
-class ViewServiceProvider extends ServiceProvider implements DeferrableProvider
+class ViewServiceProvider extends \VM\Services\ServiceProvider
 {
     /**
      * The View Engine Renderer
      */
     static $view;
-
-	/**
-	 * Indicates if loading of the provider is deferred.
-	 *
-	 * @var bool
-	 */
-	protected $defer = false;
     
 	/**
      * Register view service provider.
