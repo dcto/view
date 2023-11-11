@@ -81,6 +81,7 @@ class TwigRenderer extends Renderer
     public function getEngine($new = false)
     {
         if (!($this->engine instanceof \Twig\Environment) || $new) {
+            $this->config['cache'] = $this->cache();
             $this->engine = new \Twig\Environment($this->getLoader($new), $this->config);
         }
         return $this->engine;
@@ -88,9 +89,7 @@ class TwigRenderer extends Renderer
 
     /**
      * setTwig
-     *
      * @param   \Twig\Environment $twig
-     *
      * @return  TwigRenderer  Return self to support chaining.
      */
     public function setEngine($twig = null)
@@ -99,7 +98,6 @@ class TwigRenderer extends Renderer
             throw new \InvalidArgumentException('Invalid Engine Instaceof Twig\Environment');
         }
         $this->engine = $twig;
-        
         return $this;
     }
 }

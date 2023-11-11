@@ -214,14 +214,7 @@ class BladeRenderer extends Renderer
     protected function getCompiler()
     {
         if (!$this->compiler) {
-            $cache = $this->config('cache');
-            if (!$cache) {
-                throw new \InvalidArgumentException('Please set view.cache into config.');
-            }
-            if (!is_dir($cache)) {
-                mkdir($cache, 0755, true);
-            }
-            $this->compiler = new CompilerEngine(new BladeCompiler($this->getFilesystem(), $cache));
+            $this->compiler = new CompilerEngine(new BladeCompiler($this->getFilesystem(), $this->cache()));
         }
         return $this->compiler;
     }

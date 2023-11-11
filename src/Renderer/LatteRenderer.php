@@ -22,7 +22,7 @@ class LatteRenderer extends Renderer
         if (!$this->engine || $new) {
             $this->engine = new \Latte\Engine;
             $this->engine->setLoader(new \Latte\Loaders\FileLoader($this->getPath('current')));
-            $this->engine->setTempDirectory($this->config('cache'))->setStrictTypes(false);
+            $this->engine->setTempDirectory($this->cache())->setStrictTypes(false);
             
             $this->engine::VERSION > 3.0 && $this->engine->addExtension(new \Latte\Essential\RawPhpExtension);
         }

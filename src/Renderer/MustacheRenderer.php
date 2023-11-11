@@ -21,13 +21,12 @@ class MustacheRenderer extends Renderer
     public function getEngine($new = false)
     {
         if (!$this->engine || $new) {
-            
-            $config['loader'] = new \Mustache_Loader_FilesystemLoader($this->getPath('current'));
-            while($this->paths->valid()){ 
-                $config['partials_loader'] = new \Mustache_Loader_FilesystemLoader($this->paths->current());
-                $this->paths->next(); 
-            } 
-            $this->engine = new \Mustache_Engine($config+$this->config);
+            $this->config(['loader'=> new \Mustache_Loader_FilesystemLoader($this->getPath('current'))]);
+
+            foreach($this->getPath() as $path){
+                $config['partials_loader'] = new \Mustache_Loader_FilesystemLoader($path);
+            }
+            $this->engine = new \Mustache_Engine($this->config);
         }
         return $this->engine;
     }

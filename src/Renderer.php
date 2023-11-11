@@ -12,11 +12,13 @@ namespace VM\View;
 /**
  * Dynamic call method
  * @method config(string $key, mixed $value)
+ * @method cache($dir = null) 
  * @method assign(...$values)
  * @method render(string $template, array $data = [])
  * @method path(...$paths)
  * @method addPath(string $path)
  * @method getPath()
+ * @method engine(\Clourse $callback)
  * @method getEngine($new = false)
  * @method setEngine($engine)
  * @return mixed
@@ -33,6 +35,11 @@ namespace VM\View;
      * view cache
      */
     protected $config = [];
+
+    /**
+     * Property cache
+     */
+    protected $cache;
 
     /**
      * Property paths.
@@ -63,7 +70,6 @@ namespace VM\View;
     {
         $this->paths = new \SplPriorityQueue();
         $this->paths->insert(app_dir('View'), 100);
-        $this->config(['cache'=>runtime('view', _APP_)]);
     }
 
      /**
@@ -104,6 +110,25 @@ namespace VM\View;
 	}
 
     /**
+     * set cache dir
+     * @param string $dir
+     * @return  self|string
+     */
+    public function cache($dir = null)
+    {
+        if($dir){
+            $this->cache = $dir; 
+            return $this;
+            
+        }else if($this->cache){
+            is_dir($this->cache) || mkdir($this->cache, 0755, true);
+            return $this->cache;
+        }else{
+            throw new \InvalidArgumentException('undefined the view cache dir');
+        }
+    }
+
+    /**
 	 * add base path
 	 * @param string $path
 	 * @param int    $priority
@@ -118,6 +143,17 @@ namespace VM\View;
         $this->getEngine(true);
         return $this;
 	}
+
+    /**
+     * rebuild the engine callback
+     * @param \Closure $callback
+     * @return self
+     */
+    public function engine(\Closure $callback)
+    {
+        $callback($this->getEngine());
+        return $this;
+    }
 
     /**
      * finFile
@@ -136,7 +172,7 @@ namespace VM\View;
      */
     public function getPath($method = null)
     {
-        return $method ? $this->paths->$method() : iterator_to_array($this->paths);
+        return $method ? (clone $this->paths)->$method() : iterator_to_array(clone $this->paths);
     }
 
 
