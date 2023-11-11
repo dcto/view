@@ -70,6 +70,7 @@ namespace VM\View;
     {
         $this->paths = new \SplPriorityQueue();
         $this->paths->insert(app_dir('View'), 100);
+        $this->cache(defined('_APP_') ? runtime('view', _APP_) : __DIR__.'/runtime/view');
     }
 
      /**
@@ -118,14 +119,10 @@ namespace VM\View;
     {
         if($dir){
             $this->cache = $dir; 
-            return $this;
-            
-        }else if($this->cache){
             is_dir($this->cache) || mkdir($this->cache, 0755, true);
-            return $this->cache;
-        }else{
-            throw new \InvalidArgumentException('undefined the view cache dir');
+            return $this;
         }
+        return $this->cache;
     }
 
     /**
